@@ -4,10 +4,9 @@ var format = d3.format(",d");
 var colors = ['#C70039', '#FFD344', '#FF5733', '#FF7052'];
 var color = d3.scale.category10().range(colors);
 var bubble = d3.layout.pack()
-    .sort(null)
-    //.sort(function(a, b){return b.value - a.value})
+    .sort(function(a, b){return b.value - a.value})
     .size([diameter * 2, diameter]) //size of the bubble chart
-    .padding(1);
+    .padding(10);
 var svg = d3.select("body").select("#svg_bubble");
 var tooltip = d3.select("body") //set the tooltip
     .append("div")
@@ -69,6 +68,56 @@ var data = [
     {race: "white", gender: "M", name: "Simon Pegg", value: 2620},
     {race: "white", gender: "M", name: "Ewan McGregor", value: 2593},
     {race: "black", gender: "M", name: "Tyrese Gibson", value: 2593},
+    {race: "white", gender: "M", name: "Jim Carrey", value: 2545},
+    {race: "white", gender: "M", name: "Dustin Hoffman", value: 2522},
+    {race: "white", gender: "M", name: "Leonardo DiCaprio", value: 2518},
+    {race: "white", gender: "M", name: "Hugh Jackman", value: 2515},
+    {race: "white", gender: "M", name: "Michael Keaton", value: 2509},
+    {race: "white", gender: "F", name: "Jennifer Lawrence", value: 2486},
+    {race: "white", gender: "M", name: "Chris Evans", value: 2482},
+    {race: "white", gender: "M", name: "Philip Seymour Hoffman", value: 2463},
+    {race: "white", gender: "F", name: "Sandra Bullock", value: 2462},
+    {race: "white", gender: "M", name: "Sylvester Stallone", value: 2440},
+    {race: "white", gender: "M", name: "Alec Baldwin", value: 2437},
+    {race: "white", gender: "F", name: "Anne Hathaway", value: 2419},
+    {race: "black", gender: "M", name: "Laurence Fishburne", value: 2410},
+    {race: "white", gender: "M", name: "Nicolas Cage", value: 2407},
+    {race: "white", gender: "M", name: "John Travolta", value: 2398},
+    {race: "white", gender: "M", name: "Rupert Grint", value: 2390},
+    {race: "black", gender: "M", name: "Denzel Washington", value: 2387},
+    {race: "other", gender: "M", name: "Antonio Banderas", value: 2386},
+    {race: "other", gender: "F", name: "Michelle Rodriguez", value: 2368},
+    {race: "white", gender: "F", name: "Kathy Bates", value: 2330},
+    {race: "white", gender: "M", name: "Ben Affleck", value: 2288},
+    {race: "white", gender: "F", name: "Sigourney Weaver", value: 2280},
+    {race: "white", gender: "M", name: "Jon Voight", value: 2266},
+    {race: "white", gender: "M", name: "James Franco", value: 2262},
+    {race: "white", gender: "F", name: "Carrie Fisher", value: 2258},
+    {race: "white", gender: "M", name: "John Goodman", value: 2230},
+    {race: "white", gender: "M", name: "Christian Bale", value: 2215},
+    {race: "white", gender: "M", name: "Mike Myers", value: 2211},
+    {race: "white", gender: "M", name: "Seth Rogen", value: 2208},
+    {race: "white", gender: "M", name: "Kurt Russell", value: 2208},
+    {race: "white", gender: "M", name: "Will Ferrell", value: 2192},
+    {race: "white", gender: "M", name: "Hugo Weaving", value: 2189},
+    {race: "white", gender: "F", name: "Kristen Wiig", value: 2182},
+    {race: "white", gender: "F", name: "Angelina Jolie", value: 2179},
+    {race: "white", gender: "M", name: "Mark Hamill", value: 2176},
+    {race: "white", gender: "M", name: "Alan Tudyk", value: 2174},
+    {race: "white", gender: "M", name: "Anthony Hopkins", value: 2165},
+    {race: "black", gender: "M", name: "Jamie Foxx", value: 2154},
+    {race: "white", gender: "M", name: "Shia LaBeouf", value: 2129},
+    {race: "white", gender: "F", name: "Amy Adams", value: 2126},
+    {race: "white", gender: "M", name: "Mel Gibson", value: 2113},
+    {race: "black", gender: "M", name: "Forest Whitaker", value: 2112},
+    {race: "white", gender: "M", name: "Kevin Costner", value: 2095},
+    {race: "white", gender: "M", name: "Josh Hutcherson", value: 2094},
+    {race: "white", gender: "M", name: "Christopher Walken", value: 2093},
+    {race: "white", gender: "M", name: "Chris Pratt", value: 2083},
+    {race: "white", gender: "M", name: "George Clooney", value: 2078},
+    {race: "white", gender: "F", name: "Natalie Portman", value: 2077},
+    {race: "white", gender: "F", name: "Sally Field", value: 2075},
+    {race: "white", gender: "F", name: "Julianne Moore", value: 2074}
 ];
 var node = svg.selectAll(".node")
     .data(bubble.nodes({children:data}).filter(function(d) { return !d.children; }))
@@ -79,14 +128,13 @@ var node = svg.selectAll(".node")
 node.append("image")
     .attr("xlink:href", function(d) {
         newName = d.name.toLowerCase().replace(/\s/g,'')
-        //console.log(newName)
-        return "images/cat.png"
+        return "images/" + newName +".png"
     })
     .attr("height", function(d){
-        return d.value/95
+        return d.value/110
     })
     .attr("width", function(d){
-        return d.value/95
+        return d.value/110
     })
     .on("mouseover", function(d) {
         d3.select(this).style("stroke", "#383838");
@@ -116,7 +164,6 @@ function refresh(){
 }
 
 function groupByRace(){
-    console.log("race")
     var img = svg.selectAll(".node").select("image")
     img.attr("x", function(d){ return d.race == "white"? -200:300;});
     document.getElementById("caption").innerHTML = ''
@@ -127,7 +174,6 @@ function groupByRace(){
 }
 
 function groupByGender(){
-    console.log("gender")
     var img = svg.selectAll(".node").select("image")
     img.attr("x", function(d){ return d.gender == "F"? 300:-200;});
     document.getElementById("caption").innerHTML = ''
